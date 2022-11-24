@@ -14,13 +14,17 @@ async function addNote(title) {
 
   notes.push(note);
 
-  await fs.writeFile(notesPath, JSON.stringify(notes));
+  await saveNotes(notes);
   console.log(chalk.bgCyan("Note was added!"));
 }
 
 async function getNotes() {
   const notes = await fs.readFile(notesPath, { encoding: "utf-8" });
   return Array.isArray(JSON.parse(notes)) ? JSON.parse(notes) : [];
+}
+
+async function saveNotes(notes) {
+  await fs.writeFile(notesPath, JSON.stringify(notes));
 }
 
 async function printNotes() {
@@ -34,15 +38,12 @@ async function printNotes() {
 
 async function removeNote(id) {
   const notes = await getNotes();
+
   const updatedNotes = notes.filter((n) => n.id !== id);
 
-  console.log(
-    chalk.bgMagentaBright("Here is the list of notes after remove: ")
-  );
-  updatedNotes.forEach((note) => {
-    console.log(chalk.bgYellow(note.title));
-  });
-  await fs.writeFile(notesPath, JSON.stringify(updatedNotes));
+  await saveNotes(updatedNotes);
+
+  console.log(chalk.bgMagentaBright(`Note with id="${id}" has been removed.`));
 }
 
 module.exports = {
