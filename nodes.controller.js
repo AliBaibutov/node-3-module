@@ -46,8 +46,19 @@ async function removeNote(id) {
   console.log(chalk.bgMagentaBright(`Note with id="${id}" has been removed.`));
 }
 
+async function editNote(id, title) {
+  const notes = await getNotes();
+
+  const indexNote = notes.findIndex((n) => n.id === id);
+
+  notes[indexNote].title = title;
+
+  await saveNotes(notes);
+}
+
 module.exports = {
   addNote,
   getNotes,
   removeNote,
+  editNote,
 };
